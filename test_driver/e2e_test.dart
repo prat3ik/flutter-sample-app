@@ -4,11 +4,11 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Flutter Driver demo', () {
+  group('Sample Integration tests', () {
     FlutterDriver driver;
 
-    const DEFAULT_USERNAME = "admin";
-    const DEFAULT_PASSWORD = "admin";
+    const VALID_USERNAME = "admin";
+    const VALID_PASSWORD = "admin";
 
     final signInLabel = find.byValueKey('signInLabel');
     final userNameLabel = find.byValueKey('userNameLabel');
@@ -22,6 +22,9 @@ void main() {
     final loginAlertDialog = find.byValueKey('loginDialog');
     final loginSuccessText = find.byValueKey('loginSuccessText');
     final loginFailText = find.byValueKey('loginFailText');
+    final userNameEmptyText = find.byValueKey('userNameEmptyText');
+    final passwordEmptyText = find.byValueKey('passwordEmptyText');
+
 
     setUpAll(() async {
       driver = await FlutterDriver.connect();
@@ -41,9 +44,9 @@ void main() {
 
     test('User can login with valid credentials', () async{
       await driver.tap(userNameEditText);
-      await driver.enterText(DEFAULT_USERNAME);
+      await driver.enterText(VALID_USERNAME);
       await driver.tap(passwordEditText);
-      await driver.enterText(DEFAULT_PASSWORD);
+      await driver.enterText(VALID_PASSWORD);
       await driver.tap(loginButton);
       await driver.waitFor(loginAlertDialog);
       expect(await driver.getText(loginSuccessText), "Login Successfully..");
@@ -59,6 +62,25 @@ void main() {
       expect(await driver.getText(loginFailText), "Username and Password Incorrect..");
      });
 
+    test('User can not login with empty username', () async{
+      await driver.tap(userNameEditText);
+      await driver.enterText("");
+      await driver.tap(passwordEditText);
+      await driver.enterText(VALID_PASSWORD);
+      await driver.tap(loginButton);
+      await driver.waitFor(loginAlertDialog);
+      expect(await driver.getText(userNameEmptyText), "Username can't be empty");
+    });
+
+    test('User can not login with empty password', () async{
+      await driver.tap(userNameEditText);
+      await driver.enterText(VALID_USERNAME);
+      await driver.tap(passwordEditText);
+      await driver.enterText("");
+      await driver.tap(loginButton);
+      await driver.waitFor(loginAlertDialog);
+      expect(await driver.getText(passwordEmptyText), "Password can't be empty");
+    });
 
     tearDownAll(() async {
       if (driver != null) {
