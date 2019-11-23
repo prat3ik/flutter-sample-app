@@ -47,6 +47,7 @@ class _LoginScreenState extends State<LoginScreen>{
               children: <Widget>[
                 Text(
                   'Sign In',
+                  key: Key('signInLabel'),
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'OpenSans',
@@ -71,14 +72,17 @@ class _LoginScreenState extends State<LoginScreen>{
 
  Widget _buildUsernameTF() {
     return Column(
+
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           'Username',
+          key: Key('userNameLabel'),
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0,),
         Container(
+          key: Key('userName'),
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
@@ -110,11 +114,13 @@ class _LoginScreenState extends State<LoginScreen>{
       children: <Widget>[
         Text(
           'Password',
+          key: Key('passwordLabel'),
           style: kLabelStyle,
 
         ),
         SizedBox(height: 10.0,),
         Container(
+          key: Key('password'),
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
@@ -142,12 +148,14 @@ class _LoginScreenState extends State<LoginScreen>{
 
   Widget _buildForgotPasswordBtn() {
     return Container(
+      key: Key('forgotPassword'),
       alignment: Alignment.centerRight,
       child: FlatButton(
         onPressed: () => print('Forgot Password Button Pressed'),
         padding: EdgeInsets.only(right: 0.0),
         child: Text(
           'Forgot Password?',
+          key: Key('forgotPasswordLabel'),
           style: kLabelStyle,
         ),
       ),
@@ -160,6 +168,7 @@ class _LoginScreenState extends State<LoginScreen>{
       child: Row(
         children: <Widget>[
           Theme(
+            key: Key('rememberMeCheckBox'),
             data: ThemeData(unselectedWidgetColor: Colors.white),
             child: Checkbox(
               value: _rememberMe,
@@ -174,6 +183,7 @@ class _LoginScreenState extends State<LoginScreen>{
           ),
           Text(
             'Remember me',
+            key: Key('rememberMeLabel'),
             style: kLabelStyle,
           ),
         ],
@@ -183,6 +193,7 @@ class _LoginScreenState extends State<LoginScreen>{
 
   Widget _buildLoginBtn() {
     return Container(
+      key: Key('loginBtn'),
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: RaisedButton(
@@ -210,28 +221,39 @@ class _LoginScreenState extends State<LoginScreen>{
     var alertDialog;
     if(usernameText.isEmpty){
       alertDialog = AlertDialog(
+        key: Key('loginDialog'),
         title: Text('Login'),
-        content: Text(Validator.username(usernameText)),
+        content: Text(Validator.username(usernameText),
+        key: Key('userNameEmptyText'),),
       );
     }else if(passwordText.isEmpty){
       alertDialog = AlertDialog(
+        key: Key('loginDialog'),
         title: Text('Login'),
-        content: Text(Validator.password(passwordText)),
+        content: Text(Validator.password(passwordText),
+        key: Key('passwordEmptyText')),
       );
     }else if(usernameText == DEFAULT_USERNAME && passwordText == DEFAULT_PASSWORD){
       alertDialog = AlertDialog(
+        key: Key('loginDialog'),
         title: Text('Login'),
-        content: Text('Login Successfully..'),
+        content: Text('Login Successfully..',
+        key: Key('loginSuccessText')),
       );
     }else{
       alertDialog = AlertDialog(
+        key: Key('loginDialog'),
         title: Text('Login'),
-        content: Text('Username and Password Incorrect..'),
+        content: Text('Username and Password Incorrect..',
+        key: Key('loginFailText')),
       );
     }
     showDialog(
       context: context,
       builder: (BuildContext context){
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop(true);
+        });
         return alertDialog;
       }
     );
